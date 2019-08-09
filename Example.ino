@@ -183,15 +183,10 @@ byte WriteToFTP() {
 
 //Download Function Call
 byte ReadFromFTP() {
-  File fh = SPIFFS.open(fileName, "r");
-  if (!fh) {
-    Serial.println("file open failed");
-  }
   if (client.connect(host, 21)) {
     Serial.println(F("Command connected"));
   }
   else {
-    fh.close();
     Serial.println(F("Command connection failed"));
     return 0;
   }
@@ -242,7 +237,6 @@ byte ReadFromFTP() {
   else {
     Serial.println("Data connection failed");
     client.stop();
-    fh.close();
   }
   
   //Change Default FTP Directory
@@ -262,7 +256,6 @@ byte ReadFromFTP() {
   while (dclient.connected()) {
     while (dclient.available()) {
       char c = dclient.read();
-      fh.write(c);
       Serial.write(c);
     }
   }
@@ -279,9 +272,6 @@ byte ReadFromFTP() {
 
   client.stop();
   Serial.println(F("Command disconnected"));
-
-  fh.close();
-  Serial.println(F("File closed"));
   return 1;
 }
 
