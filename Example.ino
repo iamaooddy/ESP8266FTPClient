@@ -51,13 +51,6 @@ void setup() {
 }
 
 void loop() {
-  File f = SPIFFS.open(fileName, "a");
-  if (!f) {
-    Serial.println("file open failed");
-  }
-  f.println(text2upload);
-  f.close();
-
 //Download data from FTP Server
   if ( ReadFromFTP() )
     Serial.println(F("FTP OK"));
@@ -65,7 +58,14 @@ void loop() {
     Serial.println(F("FTP FAIL"));
 
 //Upload data to FTP Server
-  if ( WriteToFTP() )
+File f = SPIFFS.open(fileName, "a");
+  if (!f) {
+    Serial.println("file open failed");
+  }
+  f.println(text2upload);
+  f.close();
+ 
+ if ( WriteToFTP() )
     Serial.println(F("FTP OK"));
   else
     Serial.println(F("FTP FAIL"));
